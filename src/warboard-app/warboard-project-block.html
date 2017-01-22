@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="warboard-project-block">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: #F44336;
+      }
+    </style>
+  </template>
+  <script>
+
+
+    Polymer({
+
+      is: 'warboard-project-block',
+
+      properties: {
+        day: Object,
+        reflectToAttribute: true,
+      },
+
+      ready: function() {
+        if (this.day.resourced == true){
+          this.style.backgroundColor = "#4CAF50";
+        }
+        if (this.day.allocated != true){
+          this.style.backgroundColor = "#616161";
+        }
+        this.updateStyles();
+      },
+
+    });
+  </script>
+</dom-module>

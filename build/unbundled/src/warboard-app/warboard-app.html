@@ -1,0 +1,24 @@
+<html><head><link rel="import" href="../../bower_components/polymer/polymer.html">
+
+</head><body><dom-module id="warboard-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <app-header reveals="">
+    <app-toolbar>
+      <paper-icon-button icon="menu" onclick="drawer.toggle()"></paper-icon-button>
+      <div main-title="">Warboard</div>
+      <paper-icon-button icon="delete"></paper-icon-button>
+      <paper-icon-button icon="search"></paper-icon-button>
+      <paper-icon-button icon="close"></paper-icon-button>
+      <paper-progress value="10" indeterminate="" bottom-item=""></paper-progress>
+    </app-toolbar>
+  </app-header>
+  </template>
+
+  <script>Polymer({is:"warboard-app",properties:{prop1:{type:String,value:"warboard-app"}}});</script>
+</dom-module>
+</body></html>

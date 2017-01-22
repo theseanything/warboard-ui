@@ -1,0 +1,92 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="warboard-project-block.html">
+
+<dom-module id="warboard-project-bar">
+  <template>
+    <style include="iron-flex">
+      :host {
+        display: block;
+        width: 100%;
+      }
+
+      warboard-project-block {
+        width: 60px;
+        height: 80px;
+        box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 10px 0 rgba(0, 0, 0, 0.12),
+                    0 2px 4px -1px rgba(0, 0, 0, 0.4);
+      }
+
+      h2 {
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 300;
+        margin: 3px 10px;
+      }
+
+    </style>
+    <h2>[[project.ProjectName]]</h2>
+    <div class="layout horizontal">
+      <template id="resultList" is="dom-repeat" items="{{_generate_days_view(project.Start, project.End)}}" as="day">
+          <warboard-project-block day=[[day]]></warboard-project-block>
+      </template>
+    </div>
+  </template>
+  <script>
+
+    Polymer({
+
+      is: 'warboard-project-bar',
+
+      properties: {
+        project: {
+          type: Object,
+          reflectToAttribute: true,
+        },
+        displayDays: {
+          type: Number,
+          reflectToAttribute: true
+        },
+        days: {
+          type: Array,
+          value: [1,2,3,4,5,6,7,8,9],
+        }
+      },
+
+      ready: function() {
+      },
+
+
+      _generate_days_view: function(start_date, end_date) {
+
+        days = [];
+
+        start = moment(start_date, 'YYYY-MM-DD')
+
+        end = moment(end_date, 'YYYY-MM-DD')
+
+        for (var i = -44; i < 45; i++) {
+          day = moment().add(i, 'days')
+
+          day_props = {
+            date: moment().add(i, 'days').format("Do MMM"),
+            resourced: true,
+            allocated: true
+          }
+
+          if (day.isBefore(start) || day.isAfter(end)) {
+            day_props.allocated = false;
+          }
+
+          if (i > 0) {
+            day_props.resourced = false;
+          }
+
+          days.push(day_props);
+        };
+        return days
+      },
+
+    });
+  </script>
+</dom-module>

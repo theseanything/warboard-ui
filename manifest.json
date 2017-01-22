@@ -1,0 +1,7 @@
+{
+  "name": "warboard",
+  "short_name": "warboard",
+  "description": "Warboard presents a company overview of current and upcoming project and helps manage human resources.",
+  "start_url": "/",
+  "display": "standalone"
+}

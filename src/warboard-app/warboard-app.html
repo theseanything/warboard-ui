@@ -1,0 +1,128 @@
+<link rel="import" href="warboard-project-bar.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-list/iron-list.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+
+
+
+<dom-module id="warboard-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+        background-color: #E1EFF8;
+      }
+
+      body {
+        font-family: Roboto, Noto, sans-serif;
+      }
+      app-toolbar {
+        background-color: #3F7EC1;
+        color: #fff;
+        margin: 0;
+      }
+      paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      paper-icon-button + [main-title] {
+        margin-left: 24px;
+      }
+      iron-list {
+        @apply(--layout-fit);
+        padding-top: 64px;
+      }
+      .item {
+        margin-top: 20px;
+        background-color: none;
+      }
+
+    </style>
+    <iron-ajax auto url="https://7wpxm2y4dc.execute-api.us-east-1.amazonaws.com/dev/projects/" handle-as="json" last-response={{projects}} debounce-duration="300"></iron-ajax>
+    <app-header reveals>
+    <app-toolbar>
+      <div main-title>Warboard</div>
+      <div on-tap="backwardWeek">{{startDate}} -</div>
+      <div on-tap="forwardWeek">- {{endDate}}</div>
+    </app-toolbar>
+  </app-header>
+  <iron-list items="[[projects]]" as="project">
+    <template>
+      <div>
+        <div class="item">
+          <warboard-project-bar on-tap="backwardWeek" project=[[project]] startDate=[[viewDates]]></warboard-project-bar>
+        </div>
+      <div>
+    </template>
+  </iron-list>
+  </template>
+
+  <script>
+  var projects = [
+        {
+          "ProjectName": "Umbrella Inc",
+          "Start": "2017-1-3",
+          "End": "2017-1-25"
+        }
+      ];
+
+    Polymer({
+
+      is: 'warboard-app',
+
+      properties: {
+        date: {
+          type: Object,
+          value: moment().startOf('isoweek'),
+          notify: true,
+        },
+        projects: {
+          type: Array,
+          value: projects,
+          notify: true
+        },
+        week: {
+          type: Number,
+          value: 1
+        },
+        startDate: {
+          type: String,
+          computed: "_startDate(date)",
+          notify: true,
+        },
+        endDate: {
+          type: String,
+          computed: "_endDate(date)",
+          notify: true,
+        },
+      },
+      _startDate: function(date){
+        return date.format("Do MMM")
+      },
+      _endDate: function(date){
+        var endDate = date
+        return endDate.add(6, 'w').format("Do MMM")
+      },
+      forwardWeek: function(e) {
+        console.log("forward");
+        this.date.add(1, 'w');
+        this.notifyPath('date')
+        this.notifyPath('startDate')
+        this.notifyPath('endDate')
+      },
+      backwardWeek: function(e) {
+        console.log("backward");
+        this.date.subtract(1, 'w');
+        this.notifyPath('date')
+        this.notifyPath('startDate')
+        this.notifyPath('endDate')
+        console.log(this.date);
+      },
+
+    });
+  </script>
+</dom-module>

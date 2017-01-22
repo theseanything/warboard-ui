@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Time Inc",
+    "start": "10/10/10",
+    "end": "30/10/10"
+  },
+  {
+    "name": "Fitch Inc",
+    "start": "10/10/10",
+    "end": "30/10/10"
+  },
+  {
+    "name": "Discovery Channel",
+    "start": "10/10/10",
+    "end": "30/10/10"
+  },
+  {
+    "name": "Warner Music Group",
+    "start": "10/10/10",
+    "end": "30/10/10"
+  }
+]
