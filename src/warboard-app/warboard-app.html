@@ -3,6 +3,9 @@
 <link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/iron-list/iron-list.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
@@ -25,8 +28,16 @@
         color: #fff;
         margin: 0;
       }
+      app-header {
+        z-index: 10;
+
+      }
       paper-icon-button {
         --paper-icon-button-ink-color: white;
+      }
+      paper-dialog {
+        width: 500px;
+        padding: 30px;
       }
 
       paper-icon-button + [main-title] {
@@ -54,11 +65,25 @@
     <template>
       <div>
         <div class="item">
-          <warboard-project-bar on-tap="backwardWeek" project=[[project]] startDate=[[viewDates]]></warboard-project-bar>
+          <warboard-project-bar project=[[project]] start-moment=[[date]] on-click="deets"></warboard-project-bar>
         </div>
       <div>
     </template>
   </iron-list>
+  <paper-dialog id="modal" modal>
+    <h3>Project:</h3>
+    <p>[[project_deets.ProjectName]]</p>
+    <h3>Team:</h3>
+    <ul>
+      <template id="team" is="dom-repeat" items="[[project_deets.Team]]" as="member">
+          <li>[[member]]</li>
+      </template>
+    </ul>
+    <paper-checkbox checked=[[project_deets.resourced]]>Resourced</paper-checkbox>
+    <div class="buttons">
+      <paper-button dialog-confirm autofocus>Close</paper-button>
+    </div>
+  </paper-dialog>
   </template>
 
   <script>
@@ -77,9 +102,10 @@
       properties: {
         date: {
           type: Object,
-          value: moment().startOf('isoweek'),
+          value: moment().subtract(2, 'w').startOf('isoweek'),
           notify: true,
         },
+        project_deets: Object,
         projects: {
           type: Array,
           value: projects,
@@ -100,11 +126,18 @@
           notify: true,
         },
       },
+      deets: function(e){
+        console.log(e);
+        var project = e.target.parentNode.getAttribute('project')
+        console.log(project);
+        this.project_deets = JSON.parse(project)
+        modal.open()
+      },
       _startDate: function(date){
         return date.format("Do MMM")
       },
       _endDate: function(date){
-        var endDate = date
+        var endDate = date.clone()
         return endDate.add(6, 'w').format("Do MMM")
       },
       forwardWeek: function(e) {

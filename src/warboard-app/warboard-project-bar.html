@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="warboard-project-block.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
 <dom-module id="warboard-project-bar">
   <template>
@@ -11,8 +13,11 @@
       }
 
       warboard-project-block {
-        width: 60px;
         height: 80px;
+
+      }
+
+      .timeline {
         box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
                     0 1px 10px 0 rgba(0, 0, 0, 0.12),
                     0 2px 4px -1px rgba(0, 0, 0, 0.4);
@@ -26,8 +31,8 @@
 
     </style>
     <h2>[[project.ProjectName]]</h2>
-    <div class="layout horizontal">
-      <template id="resultList" is="dom-repeat" items="{{_generate_days_view(project.Start, project.End)}}" as="day">
+    <div class="layout horizontal timeline">
+      <template id="resultList" is="dom-repeat" items="{{_generate_days_view(project.Start, project.End, startMoment)}}" as="day">
           <warboard-project-block day=[[day]]></warboard-project-block>
       </template>
     </div>
@@ -50,31 +55,36 @@
         days: {
           type: Array,
           value: [1,2,3,4,5,6,7,8,9],
+        },
+        startMoment: {
+          type: Object,
+          reflectToAttribute: true,
         }
       },
 
       ready: function() {
       },
-
-
-      _generate_days_view: function(start_date, end_date) {
+      _generate_days_view: function(project_start, project_end, start_date) {
 
         days = [];
 
-        start = moment(start_date, 'YYYY-MM-DD')
+        projectStart = moment(project_start, 'YYYY-MM-DD')
 
-        end = moment(end_date, 'YYYY-MM-DD')
+        projectEnd = moment(project_end, 'YYYY-MM-DD')
 
-        for (var i = -44; i < 45; i++) {
-          day = moment().add(i, 'days')
+        diff = start_date.diff(start_date.clone().add(6,"w"), 'd')
+        for (var i = 0; i < 46; i++) {
+          day = start_date.clone().add(i, 'days')
 
           day_props = {
-            date: moment().add(i, 'days').format("Do MMM"),
+            moment: null,
+            date: day.format("ddd Do MMM"),
             resourced: true,
             allocated: true
           }
+          day_props.moment = day
 
-          if (day.isBefore(start) || day.isAfter(end)) {
+          if (day.isBefore(projectStart) || day.isAfter(projectEnd)) {
             day_props.allocated = false;
           }
 
